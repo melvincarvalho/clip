@@ -20,7 +20,7 @@ var gg;
 
 $rdf.Fetcher.crossSiteProxyTemplate=PROXY;
 
-var App = angular.module('Contacts', [
+var App = angular.module('Clip', [
     'lumx'
 ]);
 
@@ -33,10 +33,10 @@ App.controller('Main', function($scope, $http, $timeout, LxNotificationService, 
 
 });
 
-App.directive('contacts',function(){
+App.directive('clip',function(){
     return {
       replace : true,
       restrict : 'E',
-      templateUrl: 'app/views/contacts.tpl.html'
+      templateUrl: 'app/views/clip.tpl.html'
     };
 });
