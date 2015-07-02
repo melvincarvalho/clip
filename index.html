@@ -32,12 +32,24 @@
       </div>
       <div class="mt fs-subhead">Your personal clipboard</div>
       <button class="mt++ btn btn--l btn--black bgc-white-1" lx-ripple aria-label="Your personal clipboard" ng-click="TLSlogin()">
-          <span class="tc-light-blue-300">Login</span>
+          <span class="tc-light-blue-300">{{loginTLSButtonText}}</span>
       </button>
     </div>
     <!-- Login -->
   </div>
 
+  <div class="welcome row grad-bg" ng-if="loggedIn">
+    <div class="absolute-center tc-white-1">
+      <div>
+        <input class="app-name fs-display-2"></input>
+      </div>
+      <div class="mt fs-subhead"><a href="{{user}}">{{user}}</a></div>
+      <button class="mt++ btn btn--l btn--black bgc-white-1" lx-ripple aria-label="Your personal clipboard" ng-click="logout()">
+          <span class="tc-light-blue-300">Logout</span>
+      </button>
+    </div>
+    <!-- Login -->
+  </div>
 
 
   <!-- Deps -->
