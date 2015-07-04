@@ -12,8 +12,8 @@ Quick Start for contributors
 ----------------------------
 
 ```
-$ git clone git://github.com/melvincarvalho/helloworld
-$ cd helloworld
+$ git clone git://github.com/melvincarvalho/clip
+$ cd clip
 $ sudo npm -g install bower
 $ bower install
 ```
