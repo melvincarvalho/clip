@@ -24,27 +24,33 @@
 
   <!-- Welcome page -->
 
-  <div class="welcome row grad-bg" ng-if="!loggedIn">
+  <div class="welcome row grad-bg" ng-hide="loggedIn">
     <div class="absolute-center tc-white-1">
       <div class="welcome-title">
         <span class="icon icon--xl icon--flat mdi mdi-clipboard-text tc-white-1"></span>
         <span class="app-name fs-display-2">CLIP</span>
       </div>
       <div class="mt fs-subhead">Your personal clipboard</div>
-      <button class="mt++ btn btn--l btn--black bgc-white-1" lx-ripple aria-label="Your personal clipboard" ng-click="TLSlogin()">
+      <button class="mt++ btn btn--l btn--black bgc-white-1" lx-ripple aria-label="Login" ng-click="TLSlogin()">
           <span class="tc-light-blue-300">{{loginTLSButtonText}}</span>
       </button>
     </div>
     <!-- Login -->
   </div>
 
-  <div class="welcome row grad-bg" ng-if="loggedIn">
-    <div class="absolute-center tc-white-1">
+  <div class="welcome row grad-bg" ng-hide="!loggedIn">
+    <div class="absolute-center">
       <div>
-        <input class="app-name fs-display-2"></input>
+        <input autofocus="true" placeholder="clipboard" ng-model="clipboard" class="fs-display-2"></input>
+      </div>
+      <div>
+        <input placeholder="storageURI" ng-model="storageURI" size="60"></input>
       </div>
       <div class="mt fs-subhead"><a href="{{user}}">{{user}}</a></div>
-      <button class="mt++ btn btn--l btn--black bgc-white-1" lx-ripple aria-label="Your personal clipboard" ng-click="logout()">
+      <button class="mt++ btn btn--l btn--black bgc-white-1" lx-ripple aria-label="save" ng-click="save()">
+          <span class="tc-light-blue-300">Save Clip</span>
+      </button>
+      <button class="mt++ btn btn--l btn--black bgc-white-1" lx-ripple aria-label="logout" ng-click="logout()">
           <span class="tc-light-blue-300">Logout</span>
       </button>
     </div>
