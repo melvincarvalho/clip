@@ -6,6 +6,7 @@
   <title>Clip</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta href="doap.ttl#this" rel="http://www.w3.org/ns/solid/app#configuration">
 
   <style>
     [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide {
@@ -32,8 +33,12 @@
       </div>
       <div class="mt fs-subhead">Your personal clipboard</div>
       <button class="mt++ btn btn--l btn--black bgc-white-1" lx-ripple aria-label="Login" ng-click="TLSlogin()">
-          <span class="tc-light-blue-300">{{loginTLSButtonText}}</span>
+        <span class="tc-light-blue-300">{{loginTLSButtonText}}</span>
       </button>
+      <span class="mt++ btn btn--l btn--black bgc-white-1" lx-ripple aria-label="Signup">
+        <a target="_blank" href="https://linkeddata.github.io/signup/?tab=signup" class="tc-light-blue-300">Signup</a>
+      </span>
+
     </div>
     <!-- Login -->
   </div>

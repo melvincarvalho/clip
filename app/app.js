@@ -22,9 +22,6 @@ var PROXY = "https://rww.io/proxy.php?uri={uri}";
 var TIMEOUT = 5000;
 var DEBUG = true;
 
-var scope = {};
-var gg;
-
 $rdf.Fetcher.crossSiteProxyTemplate=PROXY;
 
 var App = angular.module('Clip', [
@@ -38,11 +35,16 @@ App.config(function($locationProvider) {
 
 App.controller('Main', function($scope, $http, $location, $timeout, LxNotificationService, LxProgressService, LxDialogService) {
 
-  // save app configuration if it's the first time the app runs
+  /**
+   * Init app
+   */
   $scope.initApp = function() {
     $scope.init();
   };
 
+  /**
+   * TLS Login with WebID
+   */
   $scope.TLSlogin = function() {
     $scope.loginTLSButtonText = 'Logging in...';
     $http({
@@ -68,6 +70,9 @@ App.controller('Main', function($scope, $http, $location, $timeout, LxNotificati
     });
   };
 
+  /**
+   * Save clip
+   */
   $scope.save = function() {
     var _clipboard = $scope.clipboard;
     if (!_clipboard) {
@@ -75,8 +80,6 @@ App.controller('Main', function($scope, $http, $location, $timeout, LxNotificati
       return;
     }
     console.log(_clipboard);
-
-
 
     $http({
         method: 'PUT',
@@ -97,12 +100,17 @@ App.controller('Main', function($scope, $http, $location, $timeout, LxNotificati
 
   };
 
+  /**
+   * Logout
+   */
   $scope.logout = function() {
     $scope.init();
     LxNotificationService.success('Logout Successful!');
   };
 
-  // set init variables
+  /**
+   * Set Initial variables
+   */
   $scope.init = function() {
 
     // start in memory DB
