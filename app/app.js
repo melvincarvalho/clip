@@ -26,7 +26,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, LxNotificati
   var RDFS  = $rdf.Namespace("http://www.w3.org/2000/01/rdf-schema#");
   var SIOC  = $rdf.Namespace("http://rdfs.org/sioc/ns#");
   var SOLID = $rdf.Namespace("http://www.w3.org/ns/solid/app#");
-  var URN   = $rdf.Namespace("urn:");
+  var TMP   = $rdf.Namespace("urn:tmp:");
 
   var f,g;
 
@@ -91,12 +91,12 @@ App.controller('Main', function($scope, $http, $location, $timeout, LxNotificati
    * Save clip
    */
   $scope.save = function() {
-    var _clipboard = $scope.clipboard;
-    if (!_clipboard) {
+    var clipboard = $scope.clipboard;
+    if (!clipboard) {
       LxNotificationService.error('clipboard is empty');
       return;
     }
-    console.log(_clipboard);
+    console.log(clipboard);
 
     $http({
         method: 'PUT',
@@ -105,14 +105,14 @@ App.controller('Main', function($scope, $http, $location, $timeout, LxNotificati
         headers: {
             "Content-Type": "text/turtle"
         },
-        data: '<#this> <urn:clipboard> """' + _clipboard + '""" .',
+        data: '<#this> <urn:tmp:clipboard> """' + clipboard + '""" .',
     }).
     success(function(data, status, headers) {
-      LxNotificationService.success('clipboard saved');
+      $scope.notify('clipboard saved');
       $location.search('storageURI', $scope.storageURI);
     }).
     error(function(data, status, headers) {
-      LxNotificationService.error('could not save clipboard');
+      $scope.notify('could not save clipboard', 'error');
     });
 
   };
@@ -122,21 +122,13 @@ App.controller('Main', function($scope, $http, $location, $timeout, LxNotificati
    */
   $scope.init = function() {
 
-    // start in memory DB
-    g = $rdf.graph();
-    f = $rdf.fetcher(g);
-    // add CORS proxy
-    var PROXY      = "https://data.fm/proxy?uri={uri}";
-    var AUTH_PROXY = "https://rww.io/auth-proxy?uri=";
-    //$rdf.Fetcher.crossSiteProxyTemplate=PROXY;
-    var kb         = $rdf.graph();
-    var fetcher    = $rdf.fetcher(kb);
-
-
     $scope.initialized = true;
     $scope.loggedIn = false;
     $scope.loginTLSButtonText = "Login";
-    // display elements object
+
+    // start in memory DB
+    g = $rdf.graph();
+    f = $rdf.fetcher(g);
 
     var storageURI = 'https://clip.databox.me/Public/.clip/Public/test';
     if ($location.search().storageURI) {
@@ -144,13 +136,10 @@ App.controller('Main', function($scope, $http, $location, $timeout, LxNotificati
     }
 
     f.nowOrWhenFetched(storageURI, undefined, function(ok, body) {
-      var clip = g.statementsMatching(undefined, URN('clipboard'));
-      var clipboard = clip[0].object.value;
-      console.log(clipboard);
+      var clipboard = g.any($rdf.sym(storageURI + '#this'), TMP('clipboard'));
       $scope.clipboard = clipboard;
       $scope.storageURI = storageURI;
     });
-
 
   };
 
