@@ -20,8 +20,6 @@ $ bower install
 
 # Tutorial
 
-## Introduction
-
 In this tutorial we will cover how to load and save data to a Personal Online Datastore (Pod).  The app is a simple web clipboard that allows you to save data to a store and then recover it later.
 
 *What you will learn*
@@ -133,7 +131,9 @@ The line
     $location.search('storageURI', $scope.storageURI);
 ```
 
-Changes the query string to the storage URI so that the clipboard can be bookmarked.
+Changes the query string to the storage URI so that the clipboard can be bookmarked.  Putting this all together it should be possible to see a demo as follows:
+
+  [Live Demo](http://melvincarvalho.github.io/clip/)
 
 The default location for storing the clip in this demo is public `https://clip.databox.me/Public/.clip/Public/test` but in practice you would want to store data in a private workspace under your storage root.  See Appendix B for more details.
 
