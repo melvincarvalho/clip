@@ -20,6 +20,8 @@ $ bower install
 
 # Tutorial
 
+## Introduction
+
 In this tutorial we will cover how to load and save data to a Personal Online Datastore (Pod).  The app is a simple web clipboard that allows you to save data to a store and then recover it later.
 
 *What you will learn*
@@ -88,7 +90,9 @@ For this app, the document is assumed to contain data of the form
     <#this> <urn:tmp:clipboard> "data" .
 ```
 
-The data above uses the turtle notation.  The `#this` subject is used to distinguish between document and data, and is similar to the 'this' keyword in JavaScript.  Best practice would be to mint an HTTP URI for the predicate, but for ease of demonstration purposes, a temporary URN is used at under the scheme urn:tmp:
+The data above uses the turtle notation.  The `#this` subject is used to distinguish between document and data, and is similar to the 'this' keyword in JavaScript.  
+
+A best practice would be to mint an HTTP URI for the predicate.  But for ease of demonstration purposes, a temporary URN is used at under the scheme urn:tmp:.  It is advisable always to use HTTP URIs, rather than schemes such as urn:, when dealing with linked data, this will be covered in the next tutorial.
 
 Now we can fetch the data:
 
@@ -100,7 +104,7 @@ Now we can fetch the data:
     });
 ```
 
-The `nowOrWhenFetched` will call a callback either if the document is loaded in the graph, or once it is fetched from the web.  The `$rdf.sym` function simply changes a string into a URI by placing angle brackets around it.  We use the function `g.any` to get the object of the namespace TMP of value 'clipboard'
+The `nowOrWhenFetched` will call a callback either if the document is loaded in the graph, or once it is fetched from the web.  The `$rdf.sym` function simply changes a string into a URI by placing angle brackets around it.  We use the function `g.any` to get the object of the namespace TMP of value 'clipboard'.
 
 Once we have fetched this data we can set it to the screen, and also set the storageURI which has come back successfully.
 
@@ -114,7 +118,7 @@ To save the clipboard we issue a PUT request to the server.
         headers: {
             "Content-Type": "text/turtle"
         },
-        data: '<#this> <urn:tmp:clipboard> """' + _clipboard + '""" .',
+        data: '<#this> <urn:tmp:clipboard> """' + clipboard + '""" .',
     }).
     success(function(data, status, headers) {
       $scope.notify('clipboard saved');
@@ -131,11 +135,13 @@ The line
     $location.search('storageURI', $scope.storageURI);
 ```
 
-Changes the query string to the storage URI so that the clipboard can be bookmarked.  Putting this all together it should be possible to see a demo as follows:
+Changes the query string to the storage URI so that the clipboard can be bookmarked, or shared.  It is important on the web that URIs reflect the state of a given app.
+
+Putting this all together it should be possible to see a demo as follows:
 
   [Live Demo](http://melvincarvalho.github.io/clip/)
 
-The default location for storing the clip in this demo is public `https://clip.databox.me/Public/.clip/Public/test` but in practice you would want to store data in a private workspace under your storage root.  See Appendix B for more details.
+The default location for storing the clip in this demo is public `https://clip.databox.me/Public/.clip/Public/test` but in practice you would want to store data in a private workspace under your storage root.  Automatically finding endpoints will be covered in future.  See Appendix B for more details.
 
 A typical location could be
 
