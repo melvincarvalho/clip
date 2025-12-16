@@ -1,78 +1,131 @@
-
-<!doctype html>
-<html lang="en" ng-app="Clip" ng-cloak>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>Clip</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <meta href="doap.ttl#this" rel="http://www.w3.org/ns/solid/app#configuration">
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clip - Solid Clipboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="images/favicon.png">
   <style>
-    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide {
-      display: none !important;
+    .grad-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    .clip-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .clip-card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      max-width: 500px;
+      width: 100%;
+    }
+    .clip-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .clip-icon {
+      font-size: 2.5rem;
+      color: #667eea;
+    }
+    .notification-toast {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 1000;
+      display: none;
     }
   </style>
-  <base target="_blank">
-  <link rel="stylesheet" href="bower_components/lumx/dist/lumx.css">
-  <link rel="stylesheet" href="bower_components/mdi/css/materialdesignicons.css">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="shortcut icon" type="img/png" href="images/favicon.png">
-  <link rel="manifest" href="manifest.json">
 </head>
+<body class="grad-bg">
+  <div id="notification" class="notification notification-toast"></div>
 
-<body ng-controller="Main" flow-prevent-drop flex-container="column">
-
-  <!-- Welcome page -->
-
-  <div class="welcome row grad-bg" ng-hide="loggedIn">
-    <div class="absolute-center tc-white-1">
-      <div class="welcome-title">
-        <span class="icon icon--xl icon--flat mdi mdi-clipboard-text tc-white-1"></span>
-        <span class="app-name fs-display-2">CLIP</span>
+  <div class="clip-container">
+    <!-- Welcome / Login Section -->
+    <div id="welcome" class="clip-card has-text-centered">
+      <div class="clip-title is-justify-content-center">
+        <span class="mdi mdi-clipboard-text clip-icon"></span>
+        <h1 class="title is-2 mb-0">CLIP</h1>
       </div>
-      <div class="mt fs-subhead">Your personal clipboard</div>
-      <button class="mt++ btn btn--l btn--black bgc-white-1" lx-ripple aria-label="Login" ng-click="TLSlogin()">
-        <span class="tc-light-blue-300">{{loginTLSButtonText}}</span>
-      </button>
-      <span class="mt++ btn btn--l btn--black bgc-white-1" lx-ripple aria-label="Signup">
-        <a target="_blank" href="https://databox.me/" class="tc-light-blue-300">Signup</a>
-      </span>
+      <p class="subtitle">Your personal clipboard on the decentralized web</p>
 
+      <hr>
+
+      <div class="field">
+        <label class="label" for="idp">Identity Provider:</label>
+        <div class="control">
+          <input class="input" type="url" id="idp" value="https://login.inrupt.com" placeholder="https://login.inrupt.com">
+        </div>
+      </div>
+
+      <button id="login-btn" class="button is-link is-rounded is-medium mt-4">
+        <span class="icon"><span class="mdi mdi-login"></span></span>
+        <span>Login</span>
+      </button>
+
+      <hr>
+
+      <p class="mb-3">Don't have a Pod?</p>
+      <a href="https://solidproject.org/users/get-a-pod" target="_blank" class="button is-info is-rounded is-outlined">
+        Get a Solid Pod
+      </a>
     </div>
-    <!-- Login -->
+
+    <!-- Logged In / Clipboard Section -->
+    <div id="app" class="clip-card" style="display: none;">
+      <div class="clip-title">
+        <span class="mdi mdi-clipboard-text clip-icon"></span>
+        <h1 class="title is-3 mb-0">CLIP</h1>
+      </div>
+
+      <div class="field">
+        <label class="label">Clipboard:</label>
+        <div class="control">
+          <textarea id="clipboard" class="textarea" rows="4" placeholder="Enter your text here..."></textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Storage URI:</label>
+        <div class="control">
+          <input id="storage-uri" class="input" type="url" placeholder="https://your-pod.example/clip/data">
+        </div>
+        <p class="help">Where your clipboard data is stored</p>
+      </div>
+
+      <div class="field">
+        <p class="has-text-grey-dark">
+          Logged in as: <a id="user-link" href="#" target="_blank" class="has-text-link"></a>
+        </p>
+      </div>
+
+      <div class="buttons mt-4">
+        <button id="save-btn" class="button is-success is-rounded">
+          <span class="icon"><span class="mdi mdi-content-save"></span></span>
+          <span>Save Clip</span>
+        </button>
+        <button id="load-btn" class="button is-info is-rounded">
+          <span class="icon"><span class="mdi mdi-refresh"></span></span>
+          <span>Load</span>
+        </button>
+        <button id="logout-btn" class="button is-light is-rounded">
+          <span class="icon"><span class="mdi mdi-logout"></span></span>
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
   </div>
 
-  <div class="welcome row grad-bg" ng-hide="!loggedIn">
-    <div class="absolute-center">
-      <div>
-        <input autofocus="true" placeholder="clipboard" ng-model="clipboard" class="fs-display-2"></input>
-      </div>
-      <div>
-        <input placeholder="storageURI" ng-model="storageURI" size="60"></input>
-      </div>
-      <div class="mt fs-subhead"><a href="{{user}}">{{user}}</a></div>
-      <button class="mt++ btn btn--l btn--black bgc-white-1" lx-ripple aria-label="save" ng-click="save()">
-          <span class="tc-light-blue-300">Save Clip</span>
-      </button>
-      <button class="mt++ btn btn--l btn--black bgc-white-1" lx-ripple aria-label="logout" ng-click="logout()">
-          <span class="tc-light-blue-300">Logout</span>
-      </button>
-    </div>
-    <!-- Login -->
-  </div>
-
-
-  <!-- Deps -->
-  <script src="bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="bower_components/velocity/velocity.min.js"></script>
-  <script src="bower_components/angular/angular.min.js"></script>
-  <script src="bower_components/angular-ui/build/angular-ui.min.js"></script>
-  <script src="bower_components/lumx/dist/lumx.min.js"></script>
-  <script src="vendor/rdflib.min.js"></script>
-  <script src="vendor/common.js"></script>
-  <!-- App -->
-  <script src="app/app.js"></script>
+  <script type="module" src="/src/main.js"></script>
 </body>
-
 </html>
